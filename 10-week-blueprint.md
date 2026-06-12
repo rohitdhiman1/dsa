@@ -434,34 +434,116 @@ Behind schedule? Cut in this order:
 
 ## Quick Pattern Reference
 
-| #  | Pattern                    | Core Template / Key Idea                                           |
-|----|----------------------------|--------------------------------------------------------------------|
-| 1  | Two Pointers               | left/right converge toward center                                  |
-| 2  | Sliding Window             | expand right, shrink left, track best                              |
-| 3  | Prefix Sum & Hashing       | prefix[j] - prefix[i] = subarray sum                              |
-| 4  | Fast & Slow Pointers       | slow=1 step, fast=2 steps, meet=cycle                              |
-| 5  | Linked List Manipulation   | prev/curr/next pointer trio                                        |
-| 6  | Binary Search              | find match OR search on answer space                               |
-| 7  | Monotonic Stack            | pop worse elements, answer involves current + new top              |
-| 8  | Intervals                  | sort by start, overlap = b.start < a.end                           |
-| 9  | Matrix / Simulation        | boundary tracking for spiral, in-place with markers                |
-| 10 | Tree DFS                   | return value UP vs. global state across branches                   |
-| 11 | Tree BFS                   | queue + level-size loop                                            |
-| 12 | BSTs                       | inorder = sorted order                                             |
-| 13 | Heaps                      | PriorityQueue + comparator; two-heap for median                    |
-| 14 | Tries                      | TrieNode[26] children + isEnd flag                                 |
-| 15 | Graph BFS/DFS              | visited set + queue/stack; 4-directional grid                      |
-| 16 | Topological Sort           | Kahn's: in-degree array + BFS queue                                |
-| 17 | Union-Find                 | find() with path compression + union() with rank                   |
-| 18 | Shortest Paths             | Dijkstra = PQ + dist[]; no negative weights                       |
-| 19 | Backtracking               | choose -> explore -> unchoose; sort + skip dupes                   |
-| 20 | 1-D DP                     | dp[i] relates to dp[i-1], dp[i-2], ...                            |
-| 21 | 2-D DP / Strings           | dp[i][j] = answer for s1[0..i] x s2[0..j]                        |
-| 22 | Knapsack                   | 0/1 = reverse loop; unbounded = forward loop                      |
-| 23 | Greedy                     | locally optimal = globally optimal (must be provable)              |
-| 24 | Design                     | HashMap + DLL for LRU; HashMap + ArrayList for random              |
-| 25 | Bit Manipulation           | XOR = unique; n & (n-1) = clear lowest bit                        |
-| 26 | Math                       | fast exponentiation; digit-by-digit simulation                     |
+### How to use: read the problem, scan the "Recognize When..." column, match the pattern, apply the template.
+
+---
+
+#### Arrays & Strings
+
+| #  | Pattern              | Recognize When...                                              | Template / Key Idea                          | Go-To Problem |
+|----|----------------------|----------------------------------------------------------------|----------------------------------------------|---------------|
+| 1  | Two Pointers         | Sorted array; find pair with condition; compare from both ends | `L=0, R=end; move pointer that improves ans` | 15. 3Sum      |
+| 2  | Sliding Window       | Contiguous subarray/substring; max/min with constraint         | Expand R until valid, shrink L until invalid | 76. Min Window Substring |
+| 3  | Prefix Sum & Hashing | Subarray sum equals K; count subarrays; cumulative property    | `prefix[j] - prefix[i] = sum(i+1..j)`       | 560. Subarray Sum = K |
+| 4  | Fast & Slow Pointers | Detect cycle; find middle; linked list has a loop              | `slow += 1, fast += 2; meet = cycle exists`  | 141. LL Cycle  |
+| 5  | Linked List Ops      | Reverse, merge, reorder a linked list in-place                 | `prev / curr / next` pointer trio            | 206. Reverse LL |
+
+#### Search & Structure
+
+| #  | Pattern              | Recognize When...                                              | Template / Key Idea                          | Go-To Problem |
+|----|----------------------|----------------------------------------------------------------|----------------------------------------------|---------------|
+| 6  | Binary Search        | Sorted input; "min value that satisfies X"; search on answer   | `while (lo < hi)` + midpoint + condition     | 875. Koko Bananas |
+| 7  | Monotonic Stack      | "Next greater/smaller element"; histogram; temperature         | Pop worse, answer uses current + new top     | 739. Daily Temps |
+| 8  | Intervals            | Overlapping ranges; merge/insert/count intervals               | Sort by start; overlap = `b.start < a.end`   | 56. Merge Intervals |
+| 9  | Matrix / Simulation  | 2D grid traversal; spiral order; rotate/transform in-place     | Boundary vars (top/bot/left/right), shrink   | 54. Spiral Matrix |
+
+#### Trees
+
+| #  | Pattern              | Recognize When...                                              | Template / Key Idea                          | Go-To Problem |
+|----|----------------------|----------------------------------------------------------------|----------------------------------------------|---------------|
+| 10 | Tree DFS             | Path sum; diameter; max depth; any root-to-leaf question       | Return value UP vs. global state across branches | 124. Max Path Sum |
+| 11 | Tree BFS             | Level order; right side view; zigzag; "level by level"         | Queue + `size = queue.size()` level loop     | 102. Level Order |
+| 12 | BSTs                 | Sorted tree operations; validate BST; kth smallest            | Inorder traversal = sorted order             | 230. Kth Smallest |
+
+#### Heaps & Tries
+
+| #  | Pattern              | Recognize When...                                              | Template / Key Idea                          | Go-To Problem |
+|----|----------------------|----------------------------------------------------------------|----------------------------------------------|---------------|
+| 13 | Heaps / PQ           | "Top K"; "kth largest/smallest"; streaming median              | PQ + comparator; two-heap for median         | 295. Median Stream |
+| 14 | Tries                | Prefix search; autocomplete; word dictionary with wildcards    | `TrieNode[26] children + boolean isEnd`      | 208. Implement Trie |
+
+#### Graphs
+
+| #  | Pattern              | Recognize When...                                              | Template / Key Idea                          | Go-To Problem |
+|----|----------------------|----------------------------------------------------------------|----------------------------------------------|---------------|
+| 15 | Graph BFS/DFS        | Connected components; islands; flood fill; shortest unweighted | Visited set + queue (BFS) or stack (DFS)     | 200. Num Islands |
+| 16 | Topological Sort     | Prerequisites; dependency order; "can I finish all courses?"   | Kahn's: in-degree array + BFS queue          | 207. Course Schedule |
+| 17 | Union-Find           | "Are X and Y connected?"; group merging; redundant edges       | `find()` + path compression, `union()` + rank| 684. Redundant Connection |
+| 18 | Shortest Paths       | Weighted graph; minimum cost; "delay time"; K stops            | Dijkstra = PQ + dist[]; no negative weights  | 743. Network Delay |
+| 19 | Backtracking         | Generate all subsets/permutations/combinations; constraint satisfaction | `choose -> explore -> unchoose`        | 78. Subsets    |
+
+#### Dynamic Programming
+
+| #  | Pattern              | Recognize When...                                              | Template / Key Idea                          | Go-To Problem |
+|----|----------------------|----------------------------------------------------------------|----------------------------------------------|---------------|
+| 20 | 1-D DP               | Optimal value with decisions at each step; "number of ways"    | `dp[i]` relates to `dp[i-1], dp[i-2]...`    | 322. Coin Change |
+| 21 | 2-D DP / Strings     | Two strings; edit distance; LCS; interleaving; regex           | `dp[i][j]` = answer for `s1[0..i] x s2[0..j]` | 72. Edit Distance |
+| 22 | Knapsack             | Subset to reach target sum; pick items with capacity limit     | 0/1 = reverse loop; unbounded = forward      | 416. Partition Sum |
+| 23 | Greedy               | Locally optimal = globally optimal; interval scheduling        | Prove greedy choice property first           | 55. Jump Game  |
+
+#### Design & Misc
+
+| #  | Pattern              | Recognize When...                                              | Template / Key Idea                          | Go-To Problem |
+|----|----------------------|----------------------------------------------------------------|----------------------------------------------|---------------|
+| 24 | Design               | "Design a data structure"; O(1) get/put/random                 | HashMap + DLL (LRU); HashMap + List (random) | 146. LRU Cache |
+| 25 | Bit Manipulation     | Single number; missing number; no extra space; XOR tricks      | XOR = find unique; `n & (n-1)` = clear low bit | 136. Single Number |
+| 26 | Math                 | Power function; string multiply; number theory                 | Fast exponentiation; digit-by-digit simulate | 50. Pow(x,n)   |
+
+---
+
+### Pattern Decision Flowchart
+
+```
+Problem involves an array/string?
+├── Sorted? ─────────────────────> Two Pointers or Binary Search
+├── Contiguous subarray? ────────> Sliding Window or Prefix Sum
+├── Intervals/ranges? ──────────> Intervals (sort by start)
+└── "Next greater/smaller"? ────> Monotonic Stack
+
+Problem involves a linked list?
+├── Cycle detection? ───────────> Fast & Slow Pointers
+└── Reverse/reorder? ──────────> In-Place LL Manipulation
+
+Problem involves a tree?
+├── Level-by-level? ────────────> BFS (queue + level loop)
+├── Path/depth/diameter? ──────> DFS (return value vs. global)
+└── Sorted tree property? ─────> BST (inorder = sorted)
+
+Problem involves a graph?
+├── Unweighted shortest path? ─> BFS
+├── Weighted shortest path? ───> Dijkstra (or Bellman-Ford if negative)
+├── Dependencies/ordering? ────> Topological Sort
+├── Connected components? ─────> Union-Find or DFS
+└── Grid with regions? ────────> BFS/DFS with visited set
+
+Problem asks "generate all..." or "find all combinations"?
+└── Backtracking ──────────────> choose -> explore -> unchoose
+
+Problem asks "min cost / max value / number of ways"?
+├── Optimal substructure + overlapping subproblems? ──> DP
+├── Two strings? ──────────────> 2-D DP
+├── Subset with target? ──────> Knapsack
+└── Greedy choice provable? ──> Greedy
+
+Problem asks "top K" or "kth largest"?
+└── Heap / PriorityQueue
+
+Problem asks "design a data structure"?
+└── Design (HashMap + supporting structure)
+
+Problem says "O(1) space" or "without extra space"?
+└── Bit Manipulation or Math trick
+```
 
 ---
 
